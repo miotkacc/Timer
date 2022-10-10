@@ -4,7 +4,7 @@
 
 void Timer::start(){
         std::cout<<"start timer"<<std::endl;
-        startTime = std::chrono::system_clock::now();
+        startTime = std::chrono::steady_clock::now();
         t = std::make_unique<std::thread>(periodRunner, std::ref(functionsCallInfo), startTime, std::ref(stopTimer));
 }
 
@@ -17,9 +17,9 @@ void Timer::stop(){
         }
 }
 
-std::chrono::milliseconds Timer::getElapsedTime(std::chrono::time_point<std::chrono::system_clock> start)
+std::chrono::milliseconds Timer::getElapsedTime(std::chrono::time_point<std::chrono::steady_clock> start)
 {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
+    return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start);
 };
 
 std::chrono::milliseconds Timer::getElapsedTime() const{
@@ -37,7 +37,7 @@ Timer::~Timer()
     stop();
 }
 
-void Timer::periodRunner(std::vector<FunctionCallInfo>& functionsCallInfo, std::chrono::time_point<std::chrono::system_clock> start, std::atomic<bool>& stop)
+void Timer::periodRunner(std::vector<FunctionCallInfo>& functionsCallInfo, std::chrono::time_point<std::chrono::steady_clock> start, std::atomic<bool>& stop)
 {
     while(not stop)
     {
@@ -48,7 +48,7 @@ void Timer::periodRunner(std::vector<FunctionCallInfo>& functionsCallInfo, std::
 
                 fun.info.funName();
                 fun.called = true;
-                fun.lastTimeCalled = std::chrono::system_clock::now();
+                fun.lastTimeCalled = std::chrono::steady_clock::now();
             }
             
         }

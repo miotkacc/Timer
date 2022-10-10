@@ -17,7 +17,7 @@ struct FunctionCallInfo
 {
     FunctionInfo info;
     bool called{};
-    std::chrono::time_point<std::chrono::system_clock> lastTimeCalled{};
+    std::chrono::time_point<std::chrono::steady_clock> lastTimeCalled{};
 };
 
 struct Timer{
@@ -29,8 +29,8 @@ struct Timer{
     void addFunction(FunctionInfo);
     private:
         std::atomic<bool> stopTimer{false};
-        std::chrono::time_point<std::chrono::system_clock> startTime;
+        std::chrono::time_point<std::chrono::steady_clock> startTime;
         std::vector<FunctionCallInfo> functionsCallInfo;
-        static std::chrono::milliseconds getElapsedTime(std::chrono::time_point<std::chrono::system_clock>);
-        static void periodRunner(std::vector<FunctionCallInfo>& functions, std::chrono::time_point<std::chrono::system_clock>, std::atomic<bool>& );
+        static std::chrono::milliseconds getElapsedTime(std::chrono::time_point<std::chrono::steady_clock>);
+        static void periodRunner(std::vector<FunctionCallInfo>& functions, std::chrono::time_point<std::chrono::steady_clock>, std::atomic<bool>& );
 };
