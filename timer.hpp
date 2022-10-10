@@ -11,7 +11,12 @@ struct FunctionInfo
     std::chrono::milliseconds interval;
     std::function<void (void)> funName;
     bool recurred;
-    bool called = false;
+};
+
+struct FunctionCallInfo
+{
+    FunctionInfo info;
+    bool called{};
     std::chrono::time_point<std::chrono::system_clock> lastTimeCalled{};
 };
 
@@ -23,10 +28,9 @@ struct Timer{
     std::unique_ptr<std::thread> t;
     void addFunction(FunctionInfo);
     private:
-
         std::atomic<bool> stopTimer{false};
         std::chrono::time_point<std::chrono::system_clock> startTime;
-        std::vector<FunctionInfo> functionsInfo;
+        std::vector<FunctionCallInfo> functionsCallInfo;
         static std::chrono::milliseconds get_elapsed_time(std::chrono::time_point<std::chrono::system_clock>);
-        static void periodRunner(std::vector<FunctionInfo>& functions, std::chrono::time_point<std::chrono::system_clock>, std::atomic<bool>& );
+        static void periodRunner(std::vector<FunctionCallInfo>& functions, std::chrono::time_point<std::chrono::system_clock>, std::atomic<bool>& );
 };
