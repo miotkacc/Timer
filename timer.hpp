@@ -20,11 +20,11 @@ struct FunctionCallInfo
     std::chrono::time_point<std::chrono::steady_clock> lastTimeCalled{};
 };
 
-struct Timer{
+struct SimpleTimer{
     void start();
     void stop();
     std::chrono::milliseconds getElapsedTime() const;
-    ~Timer();
+    ~SimpleTimer();
     std::unique_ptr<std::thread> t;
     void addFunction(FunctionInfo);
     private:
