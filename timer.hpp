@@ -23,7 +23,7 @@ struct FunctionCallInfo
 struct Timer{
     void start();
     void stop();
-    std::chrono::milliseconds get_elapsed_time();
+    std::chrono::milliseconds getElapsedTime() const;
     ~Timer();
     std::unique_ptr<std::thread> t;
     void addFunction(FunctionInfo);
@@ -31,6 +31,6 @@ struct Timer{
         std::atomic<bool> stopTimer{false};
         std::chrono::time_point<std::chrono::system_clock> startTime;
         std::vector<FunctionCallInfo> functionsCallInfo;
-        static std::chrono::milliseconds get_elapsed_time(std::chrono::time_point<std::chrono::system_clock>);
+        static std::chrono::milliseconds getElapsedTime(std::chrono::time_point<std::chrono::system_clock>);
         static void periodRunner(std::vector<FunctionCallInfo>& functions, std::chrono::time_point<std::chrono::system_clock>, std::atomic<bool>& );
 };
