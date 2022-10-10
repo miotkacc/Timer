@@ -1,26 +1,26 @@
 #include "timer.hpp"
 #include <chrono>
 #include <iostream>
-
-void hello2()
-{
-    std::cout<<"funkcja2"<<std::endl;
-}
-
-void hello()
-{
-    std::cout<<"funkcja"<<std::endl;
-}
+#include <stdio.h>
 
 int main(){
+    int interval;
+    std::cout<<"please give me interval in ms"<<std::endl;
+    std::cin>>interval;
     Timer t;
-    t.addFunction(FunctionInfo{std::chrono::milliseconds{2000}, hello2, true});
-    t.addFunction(FunctionInfo{std::chrono::milliseconds{1000}, hello, true});
+    t.addFunction(FunctionInfo{std::chrono::milliseconds{3*interval}, [](){std::cout<<"I am single shot!"<<std::endl;}, false});
+    t.addFunction(FunctionInfo{std::chrono::milliseconds{int(1.5*interval)}, [](){std::cout<<"Running..."<<std::endl;}, true});
+    t.addFunction(FunctionInfo{std::chrono::milliseconds{interval}, [](){std::cout<<"Walking..."<<std::endl;}, true});
     t.start();
-    std::cout<<t.getElapsedTime().count()<<" elapsed time"<<std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds{4});
-    t.stop();
-    std::cout<<t.getElapsedTime().count()<<" elapsed time"<<std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds{4});
+    std::cout<<"E displays elapsed time for all running timers"<<std::endl;
+    std::cout<<"Q stops application"<<std::endl;
+    char key = ' ';
+    while(key != 'Q')
+    {
+        std::cin>>key;
+        if(key == 'E'){
+            std::cout<<t.getElapsedTime().count()<<" elapsed time"<<std::endl;
+        }
+    }
     return 0;
 }
