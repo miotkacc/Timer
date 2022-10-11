@@ -1,4 +1,4 @@
-# xdd
+# Timer
 
 ![sequence](imgs/sequence.drawio.png)
 
