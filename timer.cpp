@@ -47,6 +47,7 @@ void SimpleTimer::periodRunner(FunctionCallInfo& fun, std::chrono::time_point<st
         if(getElapsedTime(fun.lastTimeCalled) > fun.info.interval && (fun.info.recurred || not fun.called)){
 
             fun.info.funName(); //to do -> start separate thread here
+            std::cout<<"uplynelo "<<getElapsedTime(fun.lastTimeCalled).count()<<std::endl;
             fun.called = true;
             fun.lastTimeCalled = std::chrono::steady_clock::now();
         }
