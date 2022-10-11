@@ -3,7 +3,6 @@
 #include <functional>
 #include <atomic>
 #include <memory>
-#include <vector>
 
 
 struct FunctionInfo

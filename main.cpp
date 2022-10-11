@@ -1,6 +1,7 @@
-#include "timer.hpp"
 #include <chrono>
 #include <iostream>
+
+#include "timer.hpp"
 
 int main(){
     int interval_ms;

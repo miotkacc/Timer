@@ -1,15 +1,14 @@
-#include "timer.hpp"
 #include <iostream>
+
+#include "timer.hpp"
 
 
 void SimpleTimer::start(){
-        std::cout<<"start timer"<<std::endl;
         startTime = std::chrono::steady_clock::now();
         t = std::make_unique<std::thread>(periodRunner, std::ref(functionCallInfo), std::ref(stopTimer));
 }
 
 void SimpleTimer::stop(){
-        std::cout<<"stop timer"<<std::endl;
         stopTimer = true;
         if(t and t->joinable())
         { 
@@ -20,7 +19,7 @@ void SimpleTimer::stop(){
 std::chrono::milliseconds SimpleTimer::getElapsedTime(const std::chrono::time_point<std::chrono::steady_clock>& start)
 {
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start);
-};
+}
 
 std::chrono::milliseconds SimpleTimer::getElapsedTime() const{
     return getElapsedTime(startTime);
