@@ -26,11 +26,11 @@ struct SimpleTimer{
     std::chrono::milliseconds getElapsedTime() const;
     ~SimpleTimer();
     std::unique_ptr<std::thread> t;
-    void addFunction(FunctionInfo);
+    SimpleTimer(FunctionInfo functionInfo);
     private:
         std::atomic<bool> stopTimer{false};
         std::chrono::time_point<std::chrono::steady_clock> startTime;
-        std::vector<FunctionCallInfo> functionsCallInfo;
+        FunctionCallInfo functionCallInfo;
         static std::chrono::milliseconds getElapsedTime(std::chrono::time_point<std::chrono::steady_clock>);
-        static void periodRunner(std::vector<FunctionCallInfo>& functions, std::chrono::time_point<std::chrono::steady_clock>, std::atomic<bool>& );
+        static void periodRunner(FunctionCallInfo& functions, std::chrono::time_point<std::chrono::steady_clock>, std::atomic<bool>&);
 };

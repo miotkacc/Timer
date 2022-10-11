@@ -7,11 +7,12 @@ int main(){
     int interval;
     std::cout<<"please give me interval in ms"<<std::endl;
     std::cin>>interval;
-    SimpleTimer t;
-    t.addFunction(FunctionInfo{std::chrono::milliseconds{3*interval}, []{std::cout<<"I am single shot!"<<std::endl;}, false});
-    //t.addFunction(FunctionInfo{std::chrono::milliseconds{int(1.5*interval)}, [](){std::cout<<"Running..."<<std::endl;}, true});
-    //t.addFunction(FunctionInfo{std::chrono::milliseconds{interval}, [](){std::cout<<"Walking..."<<std::endl;}, true});
-    t.start();
+    SimpleTimer t1({std::chrono::milliseconds{3*interval}, []{std::cout<<"I am single shot!"<<std::endl;}, false});
+    SimpleTimer t2({std::chrono::milliseconds{int(1.5*interval)}, [](){std::cout<<"Running..."<<std::endl;}, true});
+    SimpleTimer t3({std::chrono::milliseconds{interval}, [](){std::cout<<"Walking..."<<std::endl;}, true});
+    t1.start();
+    t2.start();
+    t3.start();
     std::cout<<"E displays elapsed time for all running timers"<<std::endl;
     std::cout<<"Q stops application"<<std::endl;
     char key = ' ';
@@ -19,7 +20,9 @@ int main(){
     {
         std::cin>>key;
         if(key == 'E'){
-            std::cout<<t.getElapsedTime().count()<<" elapsed time"<<std::endl;
+            std::cout<<t1.getElapsedTime().count()<<" t1 elapsed time"<<std::endl;
+            std::cout<<t2.getElapsedTime().count()<<" t2 elapsed time"<<std::endl;
+            std::cout<<t3.getElapsedTime().count()<<" t3 elapsed time"<<std::endl;
         }
     }
     return 0;

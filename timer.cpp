@@ -5,7 +5,7 @@
 void SimpleTimer::start(){
         std::cout<<"start timer"<<std::endl;
         startTime = std::chrono::steady_clock::now();
-        t = std::make_unique<std::thread>(periodRunner, std::ref(functionsCallInfo), startTime, std::ref(stopTimer));
+        t = std::make_unique<std::thread>(periodRunner, std::ref(functionCallInfo), startTime, std::ref(stopTimer));
 }
 
 void SimpleTimer::stop(){
@@ -27,30 +27,28 @@ std::chrono::milliseconds SimpleTimer::getElapsedTime() const{
 }
 
 
-void SimpleTimer::addFunction(FunctionInfo f)
-{
-    functionsCallInfo.push_back({f});
-}
 
 SimpleTimer::~SimpleTimer()
 {
     stop();
 }
 
-void SimpleTimer::periodRunner(std::vector<FunctionCallInfo>& functionsCallInfo, std::chrono::time_point<std::chrono::steady_clock> start, std::atomic<bool>& stop)
+SimpleTimer::SimpleTimer(FunctionInfo functionInfo)
 {
-    while(not stop)
-    {
-        std::this_thread::sleep_for(std::chrono::nanoseconds{900});
-        for(auto& fun: functionsCallInfo)
-        {
-            if((fun.info.recurred && getElapsedTime(fun.lastTimeCalled) > fun.info.interval) || not fun.called){
+    functionCallInfo = FunctionCallInfo{functionInfo};
+}
 
-                fun.info.funName();
-                fun.called = true;
-                fun.lastTimeCalled = std::chrono::steady_clock::now();
-            }
-            
+void SimpleTimer::periodRunner(FunctionCallInfo& fun, std::chrono::time_point<std::chrono::steady_clock> start, std::atomic<bool>& stop)
+{
+    fun.lastTimeCalled = std::chrono::steady_clock::now();
+    std::this_thread::sleep_for(std::chrono::nanoseconds{900});
+    while(not stop)
+    {        
+        if(getElapsedTime(fun.lastTimeCalled) > fun.info.interval && (fun.info.recurred || not fun.called)){
+
+            fun.info.funName(); //to do -> start separate thread here
+            fun.called = true;
+            fun.lastTimeCalled = std::chrono::steady_clock::now();
         }
     }
 }
