@@ -30,6 +30,6 @@ struct SimpleTimer{
         std::atomic<bool> stopTimer{false};
         std::chrono::time_point<std::chrono::steady_clock> startTime;
         FunctionCallInfo functionCallInfo;
-        static std::chrono::milliseconds getElapsedTime(const std::chrono::time_point<std::chrono::steady_clock>&);
-        static void periodRunner(FunctionCallInfo& functions, std::atomic<bool>&);
+        std::chrono::milliseconds getElapsedTime(const std::chrono::time_point<std::chrono::steady_clock>&) const ;
+        void periodRunner();
 };
