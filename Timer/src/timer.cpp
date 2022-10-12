@@ -38,9 +38,9 @@ SimpleTimer::SimpleTimer(FunctionInfo functionInfo)
 void SimpleTimer::periodRunner(FunctionCallInfo& fun, std::atomic<bool>& stop)
 {
     fun.lastTimeCalled = std::chrono::steady_clock::now();
-    std::this_thread::sleep_for(std::chrono::nanoseconds{900});
     while(not stop)
     {        
+        std::this_thread::sleep_for(std::chrono::nanoseconds{900});
         if(getElapsedTime(fun.lastTimeCalled) >= fun.info.interval && (fun.info.recurred || not fun.called)){
             std::thread t(fun.info.funName);
             t.detach();
