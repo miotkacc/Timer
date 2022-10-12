@@ -4,16 +4,20 @@
 
 
 void SimpleTimer::start(){
-        startTime = std::chrono::steady_clock::now();
-        t = std::make_unique<std::thread>(&SimpleTimer::periodRunner, this);
+    if(t and t->joinable())
+    { 
+        t->join();
+    }
+    startTime = std::chrono::steady_clock::now();
+    t = std::make_unique<std::thread>(&SimpleTimer::periodRunner, this);
 }
 
 void SimpleTimer::stop(){
-        stopTimer = true;
-        if(t and t->joinable())
-        { 
-            t->join();
-        }
+    stopTimer = true;
+    if(t and t->joinable())
+    { 
+        t->join();
+    }
 }
 
 std::chrono::milliseconds SimpleTimer::getElapsedTime(const std::chrono::time_point<std::chrono::steady_clock>& start) const
@@ -30,9 +34,9 @@ SimpleTimer::~SimpleTimer()
     stop();
 }
 
-SimpleTimer::SimpleTimer(FunctionInfo functionInfo)
+SimpleTimer::SimpleTimer(Timer::FunctionInfo functionInfo)
 {
-    functionCallInfo = FunctionCallInfo{functionInfo};
+    functionCallInfo = Timer::FunctionCallInfo{functionInfo};
 }
 
 void SimpleTimer::periodRunner()
@@ -42,8 +46,7 @@ void SimpleTimer::periodRunner()
     {        
         std::this_thread::sleep_for(std::chrono::nanoseconds{900});
         if(getElapsedTime(functionCallInfo.lastTimeCalled) >= functionCallInfo.info.interval && (functionCallInfo.info.recurred || not functionCallInfo.called)){
-            std::thread t1(functionCallInfo.info.funName);
-            t1.detach();
+            functionCallInfo.info.funName();
             functionCallInfo.called = true;
             functionCallInfo.lastTimeCalled = std::chrono::steady_clock::now();
         }
