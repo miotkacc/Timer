@@ -4,6 +4,8 @@
 #include <atomic>
 #include <memory>
 
+#include "ITimer.hpp"
+
 
 namespace Timer{
     struct FunctionInfo
@@ -20,10 +22,10 @@ namespace Timer{
         std::chrono::time_point<std::chrono::steady_clock> lastTimeCalled{};
     };
 }
-struct SimpleTimer{
-    void start();
-    void stop();
-    std::chrono::milliseconds getElapsedTime() const;
+struct SimpleTimer : ISimpleTimer{
+    void start() override;
+    void stop() override;
+    std::chrono::milliseconds getElapsedTime() const override;
     ~SimpleTimer();
     SimpleTimer(Timer::FunctionInfo functionInfo);
     private:
