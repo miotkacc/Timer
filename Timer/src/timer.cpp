@@ -44,7 +44,8 @@ void SimpleTimer::periodRunner()
     functionCallInfo.lastTimeCalled = std::chrono::steady_clock::now();
     while(not stopTimer)
     {        
-        std::this_thread::sleep_for(std::chrono::nanoseconds{900});
+        std::chrono::nanoseconds iterationTime{900};
+        std::this_thread::sleep_until(std::chrono::steady_clock::now() + iterationTime);
         bool timeElapsed = getElapsedTime(functionCallInfo.lastTimeCalled) >= functionCallInfo.info.interval;
         bool canBeCalled = functionCallInfo.info.recurred || not functionCallInfo.called;
         if(timeElapsed && canBeCalled){
