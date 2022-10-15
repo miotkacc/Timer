@@ -15,11 +15,11 @@ add_subdirectory(Timer)
 
 add_executable(main main.cpp)
 
-target_link_libraries(main Timer)
+target_link_libraries(main TimerBuilder)
 
 
 add_executable(tests tests.cpp)
-target_link_libraries(tests Timer GTest::gtest_main GTest::gmock_main)
+target_link_libraries(tests Timer TimerBuilder GTest::gtest_main GTest::gmock_main)
 
 include(GoogleTest)
 gtest_discover_tests(tests)

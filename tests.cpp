@@ -3,13 +3,13 @@
 #include <thread>
 
 #include "timer.hpp"
+#include "timerBuilder.hpp"
 using namespace testing;
 
+const std::chrono::seconds timeToCall{1};
+const std::chrono::seconds waitTime{3};
 
-
-TEST(TestTimer, GivenTimerWhenStartIsCalledExpectCallCallback) { 
-    const std::chrono::seconds timeToCall{1};
-    const std::chrono::seconds waitTime{5};
+TEST(TestTimer, GivenTimerWhenStartIsCalledExpectCallCallback) {
     MockFunction<void(void)> mockCallback;
     EXPECT_CALL(mockCallback, Call()); 
     Timer::FunctionInfo functionInfo{std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall), mockCallback.AsStdFunction(),  false};
@@ -18,6 +18,14 @@ TEST(TestTimer, GivenTimerWhenStartIsCalledExpectCallCallback) {
     std::this_thread::sleep_for(waitTime);
 }
 
+TEST(TestTimerBuilder, GivenConstructedTimerWithBuilderWhenStartIsCalledExpectCallCallback) { 
+    MockFunction<void(void)> mockCallback;
+    EXPECT_CALL(mockCallback, Call()); 
+    Timer::FunctionInfo functionInfo{std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall), mockCallback.AsStdFunction(),  false};
+    auto timer = TimerBuilder::CreateOneShotTimer(mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall));
+    timer.start();
+    std::this_thread::sleep_for(waitTime);
+}
  
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

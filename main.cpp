@@ -1,7 +1,9 @@
 #include <chrono>
 #include <iostream>
 
+#include "timerBuilder.hpp"
 #include "timer.hpp"
+
 
 int main(){
     int interval_ms;
@@ -11,9 +13,9 @@ int main(){
         std::cin>>interval;
         interval_ms = interval*1000;
     }
-    SimpleTimer t1({std::chrono::milliseconds{3*interval_ms}, []{std::cout<<"I am single shot!"<<std::endl;}, false});
-    SimpleTimer t2({std::chrono::milliseconds{int(1.5*interval_ms)}, [](){std::cout<<"Running..."<<std::endl;}, true});
-    SimpleTimer t3({std::chrono::milliseconds{interval_ms}, [](){std::cout<<"Walking..."<<std::endl;}, true});
+    auto t1 = TimerBuilder::CreateOneShotTimer([]{std::cout<<"I am single shot!"<<std::endl;}, std::chrono::milliseconds{3*interval_ms});
+    auto t2 = TimerBuilder::CreateRecurringTimer([](){std::cout<<"Running..."<<std::endl;}, std::chrono::milliseconds{int(1.5*interval_ms)});
+    auto t3 = TimerBuilder::CreateRecurringTimer([](){std::cout<<"Walking..."<<std::endl;}, std::chrono::milliseconds{interval_ms});
     t1.start();
     t2.start();
     t3.start();
