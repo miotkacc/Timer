@@ -5,15 +5,17 @@
 #include "timer.hpp"
 using namespace testing;
 
-MockFunction<void(void)> mockCallback;
+
 
 TEST(TestTimer, GivenTimerWhenStartIsCalledExpectCallCallback) { 
     const std::chrono::seconds timeToCall{1};
     const std::chrono::seconds waitTime{5};
-    Timer::FunctionInfo functionInfo{std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall), mockCallback.AsStdFunction(), false};
-    SimpleTimer timer(functionInfo);
-    std::this_thread::sleep_for(waitTime);
+    MockFunction<void(void)> mockCallback;
     EXPECT_CALL(mockCallback, Call()); 
+    Timer::FunctionInfo functionInfo{std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall), mockCallback.AsStdFunction(),  false};
+    SimpleTimer timer(functionInfo);
+    timer.start();
+    std::this_thread::sleep_for(waitTime);
 }
 
  

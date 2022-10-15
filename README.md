@@ -13,14 +13,15 @@ If user type "E" all timers elapsed time(time since start counting) is displayed
 
 
 # how to run
-
-install:
-```
-sudo apt-get install libgtest-dev libgmock-dev
-```
-
 ```
 mkdir build  
 cd build && cmake .. && make  
 ./main  
+```
+
+# how to run tests
+```
+mkdir build  
+cd build && cmake .. && make  
+./tests
 ```
