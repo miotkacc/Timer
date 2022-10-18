@@ -34,19 +34,19 @@ SimpleTimer::~SimpleTimer()
     stop();
 }
 
-SimpleTimer::SimpleTimer(Timer::FunctionInfo functionInfo)
+SimpleTimer::SimpleTimer(Timer::FunctionInfo functionInfo, std::unique_ptr<IRunnerStrategy> inStrategy)
+: strategy(std::move(inStrategy)), functionInfo{functionInfo}
 {
-    functionCallInfo = Timer::FunctionCallInfo{functionInfo};
 }
 
 void SimpleTimer::periodRunner()
 {
-    functionCallInfo.lastTimeCalled = std::chrono::steady_clock::now();
+    functionInfo.lastTimeCalled = std::chrono::steady_clock::now();
     while(not stopTimer)
     {        
         std::chrono::nanoseconds iterationTime{900};
         std::this_thread::sleep_until(std::chrono::steady_clock::now() + iterationTime);
-        bool timeElapsed = getElapsedTime(functionCallInfo.lastTimeCalled) >= functionCallInfo.info.interval;
+        bool timeElapsed = getElapsedTime(functionInfo.lastTimeCalled) >= functionCallInfo.info.interval;
         bool canBeCalled = functionCallInfo.info.recurred || not functionCallInfo.called;
         if(timeElapsed && canBeCalled){
             functionCallInfo.info.funName();
