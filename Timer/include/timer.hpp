@@ -19,9 +19,6 @@ struct SimpleTimer : ISimpleTimer{
     private:
         std::unique_ptr<std::thread> t;
         std::unique_ptr<IRunnerStrategy> strategy;
-        std::atomic<bool> stopTimer{false};
         std::chrono::time_point<std::chrono::steady_clock> startTime;
         Timer::FunctionInfo functionInfo;
-        std::chrono::milliseconds getElapsedTime(const std::chrono::time_point<std::chrono::steady_clock>&) const ;
-        void periodRunner();
 };

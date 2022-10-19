@@ -6,6 +6,5 @@ namespace Timer{
     {
         std::function<void (void)> funName;
         std::chrono::milliseconds interval;
-        std::chrono::time_point<std::chrono::steady_clock> lastTimeCalled{};
     };
 }

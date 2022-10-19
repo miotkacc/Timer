@@ -5,6 +5,8 @@
 
 class SingleRunnerStrategy: public IRunnerStrategy{
 public:
-    void run(Timer::FunctionInfo&) override;
+    void run(const Timer::FunctionInfo&) override;
     void stop() override;
+private:
+    std::atomic<bool> stopVar;
 };
