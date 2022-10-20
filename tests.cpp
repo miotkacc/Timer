@@ -2,8 +2,8 @@
 #include <gmock/gmock.h>
 #include <thread>
 
-#include "timer.hpp"
-#include "timerBuilder.hpp"
+#include "SimpleTimer.hpp"
+#include "SimpleTimerFactory.hpp"
 #include "singleRunnerStrategy.hpp"
 
 using namespace testing;
@@ -22,9 +22,10 @@ TEST(TestTimer, GivenTimerWhenStartIsCalledExpectCallCallback) {
 
 TEST(TestTimerBuilder, GivenConstructedTimerWithBuilderWhenStartIsCalledExpectCallCallback) { 
     MockFunction<void(void)> mockCallback;
-    EXPECT_CALL(mockCallback, Call()); 
-    auto timer = TimerBuilder::CreateOneShotTimer(mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall));
-    timer.start();
+    EXPECT_CALL(mockCallback, Call());
+    SimpleTimerFactory simpleTimerFactory{}; 
+    auto timer = simpleTimerFactory.CreateOneShotTimer(mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall));
+    timer->start();
     std::this_thread::sleep_for(waitTime);
 }
  

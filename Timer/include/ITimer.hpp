@@ -3,7 +3,7 @@
 #include <chrono>
 
 
-struct ISimpleTimer{
+struct ITimer{
     virtual void start() = 0;
     virtual void stop() = 0;
     virtual std::chrono::milliseconds getElapsedTime() const = 0;

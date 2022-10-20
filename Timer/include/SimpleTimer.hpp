@@ -10,7 +10,7 @@
 #include "functionInfo.hpp"
 #include "IRunnerStrategy.hpp"
 
-struct SimpleTimer : ISimpleTimer{
+struct SimpleTimer : ITimer{
     void start() override;
     void stop() override;
     std::chrono::milliseconds getElapsedTime() const override;

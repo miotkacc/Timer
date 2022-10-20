@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "timer.hpp"
+#include "SimpleTimer.hpp"
 
 
 void SimpleTimer::start(){
