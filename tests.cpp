@@ -15,7 +15,7 @@ TEST(TestTimer, GivenTimerWhenStartIsCalledExpectCallCallback) {
     MockFunction<void(void)> mockCallback;
     EXPECT_CALL(mockCallback, Call()); 
     Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
-    SimpleTimer timer(functionInfo, std::make_unique<SingleRunnerStrategy>());
+    SimpleTimer<std::chrono::milliseconds> timer(functionInfo, std::make_unique<SingleRunnerStrategy>());
     timer.start();
     std::this_thread::sleep_for(waitTime);
 }
@@ -23,7 +23,7 @@ TEST(TestTimer, GivenTimerWhenStartIsCalledExpectCallCallback) {
 TEST(TestTimerBuilder, GivenConstructedTimerWithBuilderWhenStartIsCalledExpectCallCallback) { 
     MockFunction<void(void)> mockCallback;
     EXPECT_CALL(mockCallback, Call());
-    SimpleTimerFactory simpleTimerFactory{}; 
+    SimpleTimerFactory<std::chrono::milliseconds> simpleTimerFactory{}; 
     auto timer = simpleTimerFactory.CreateOneShotTimer(mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall));
     timer->start();
     std::this_thread::sleep_for(waitTime);

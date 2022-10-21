@@ -2,8 +2,11 @@
 
 #include "TimerAbstractFactory.hpp"
 
-struct SimpleTimerFactory: TimerAbstractFactory
+template <typename T>
+struct SimpleTimerFactory: TimerAbstractFactory<T>
 {
-    std::unique_ptr<ITimer> CreateOneShotTimer(std::function<void()>, std::chrono::milliseconds);
-    std::unique_ptr<ITimer> CreateRecurringTimer(std::function<void()>, std::chrono::milliseconds);
+    std::unique_ptr<ITimer<T>> CreateOneShotTimer(std::function<void()>, std::chrono::milliseconds);
+    std::unique_ptr<ITimer<T>> CreateRecurringTimer(std::function<void()>, std::chrono::milliseconds);
 };
+
+#include "../src/SimpleTimerFactory.cpp"

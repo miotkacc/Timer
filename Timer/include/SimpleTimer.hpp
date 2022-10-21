@@ -10,10 +10,11 @@
 #include "functionInfo.hpp"
 #include "IRunnerStrategy.hpp"
 
-struct SimpleTimer : ITimer{
+template <typename T>
+struct SimpleTimer : ITimer<T>{
     void start() override;
     void stop() override;
-    std::chrono::milliseconds getElapsedTime() const override;
+    T getElapsedTime() const override;
     ~SimpleTimer();
     SimpleTimer(Timer::FunctionInfo functionInfo, std::unique_ptr<IRunnerStrategy>);
     private:
@@ -22,3 +23,6 @@ struct SimpleTimer : ITimer{
         std::chrono::time_point<std::chrono::steady_clock> startTime;
         Timer::FunctionInfo functionInfo;
 };
+
+#include "../src/SimpleTimer.cpp"
+

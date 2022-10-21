@@ -1,9 +1,11 @@
+#pragma once
+
 #include <iostream>
 
 #include "SimpleTimer.hpp"
 
-
-void SimpleTimer::start(){
+template <typename T>
+void SimpleTimer<T>::start(){
     if(t and t->joinable())
     { 
         t->join();
@@ -12,7 +14,8 @@ void SimpleTimer::start(){
     t = std::make_unique<std::thread>(&IRunnerStrategy::run, strategy.get(), std::ref(functionInfo));
 }
 
-void SimpleTimer::stop(){
+template <typename T>
+void SimpleTimer<T>::stop(){
     strategy->stop();
     if(t and t->joinable())
     { 
@@ -20,16 +23,19 @@ void SimpleTimer::stop(){
     }
 }
 
-std::chrono::milliseconds SimpleTimer::getElapsedTime() const{
+template <typename T>
+T SimpleTimer<T>::getElapsedTime() const{
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - startTime);
 }
 
-SimpleTimer::~SimpleTimer()
+template <typename T>
+SimpleTimer<T>::~SimpleTimer()
 {
     stop();
 }
 
-SimpleTimer::SimpleTimer(Timer::FunctionInfo functionInfo, std::unique_ptr<IRunnerStrategy> inStrategy)
+template <typename T>
+SimpleTimer<T>::SimpleTimer(Timer::FunctionInfo functionInfo, std::unique_ptr<IRunnerStrategy> inStrategy)
 : functionInfo(functionInfo), strategy(std::move(inStrategy))
 {
 }
