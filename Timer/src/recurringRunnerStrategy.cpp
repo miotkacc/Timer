@@ -4,6 +4,10 @@
 #include "functionInfo.hpp"
 #include "ITimer.hpp"
 
+RecurringRunnerStrategy::RecurringRunnerStrategy(std::chrono::nanoseconds period):
+checkOfElapsedTimePeriod{period}
+{};
+
 void RecurringRunnerStrategy::stop()
 {
     stopVar = true;
@@ -12,12 +16,11 @@ void RecurringRunnerStrategy::stop()
 void RecurringRunnerStrategy::run(const Timer::FunctionInfo& functionInfo, ITimer* const timer){
     int lastIntervalCall{};
     while(not stopVar)
-    {        
-        std::chrono::nanoseconds iterationTime{900};
-        std::this_thread::sleep_until(std::chrono::steady_clock::now() + iterationTime);
+    {
+        std::this_thread::sleep_until(std::chrono::steady_clock::now() + checkOfElapsedTimePeriod);
         auto actualInterval = timer->getElapsedTime() / functionInfo.interval;
-        bool timeElapsed =  lastIntervalCall != actualInterval;
-        if(timeElapsed){
+        bool isTimeElapsed =  lastIntervalCall != actualInterval;
+        if(isTimeElapsed){
             functionInfo.funName();
             lastIntervalCall = actualInterval;
         }

@@ -4,6 +4,9 @@
 #include "functionInfo.hpp"
 #include "ITimer.hpp"
 
+SingleRunnerStrategy::SingleRunnerStrategy(std::chrono::nanoseconds period):
+checkOfElapsedTimePeriod{period}
+{};
 
 void SingleRunnerStrategy::stop()
 {
@@ -13,10 +16,9 @@ void SingleRunnerStrategy::stop()
 void SingleRunnerStrategy::run(const Timer::FunctionInfo& functionInfo, ITimer* const timer){
     while(not stopVar)
     {        
-        std::chrono::nanoseconds iterationTime{900};
-        std::this_thread::sleep_until(std::chrono::steady_clock::now() + iterationTime);
-        bool timeElapsed = timer->getElapsedTime() >= functionInfo.interval;
-        if(timeElapsed){
+        std::this_thread::sleep_until(std::chrono::steady_clock::now() + checkOfElapsedTimePeriod);
+        bool isTimeElapsed = timer->getElapsedTime() >= functionInfo.interval;
+        if(isTimeElapsed){
             functionInfo.funName();
             break;
         }
