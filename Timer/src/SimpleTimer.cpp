@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "SimpleTimer.hpp"
 
 
@@ -9,7 +7,7 @@ void SimpleTimer::start(){
         t->join();
     }
     startTime = std::chrono::steady_clock::now();
-    t = std::make_unique<std::thread>(&IRunnerStrategy::run, strategy.get(), std::ref(functionInfo));
+    t = std::make_unique<std::thread>(&IRunnerStrategy::run, strategy.get(), std::ref(functionInfo), this);
 }
 
 void SimpleTimer::stop(){

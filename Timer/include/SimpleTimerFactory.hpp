@@ -2,6 +2,7 @@
 
 #include "TimerAbstractFactory.hpp"
 
+
 struct SimpleTimerFactory: TimerAbstractFactory
 {
     std::unique_ptr<ITimer> CreateOneShotTimer(std::function<void()>, std::chrono::milliseconds);
