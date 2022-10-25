@@ -25,7 +25,7 @@ TEST(TestTimer, GivenTimerWhenStartIsCalledExpectCallCallback) {
 TEST(TestTimer, GivenTimerWhenStartIsCalledTwoTimesExpectNoCrash) {
     MockFunction<void(void)> mockCallback;
     Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
-    SimpleTimer<std::chrono::milliseconds> timer(functionInfo, std::make_unique<SingleRunnerStrategy>());
+    SimpleTimer timer(functionInfo, std::make_unique<SingleRunnerStrategy>());
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
     timer.start();
@@ -34,7 +34,7 @@ TEST(TestTimer, GivenTimerWhenStartIsCalledTwoTimesExpectNoCrash) {
 TEST(TestTimer, GivenTimerWhenTimerIsStartedAndStoppedTwoTimesExpectNoCrash) {
     MockFunction<void(void)> mockCallback;
     Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
-    SimpleTimer<std::chrono::milliseconds> timer(functionInfo, std::make_unique<SingleRunnerStrategy>());
+    SimpleTimer timer(functionInfo, std::make_unique<SingleRunnerStrategy>());
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
     timer.stop();
@@ -47,7 +47,7 @@ TEST(TestTimer, GivenTimerWhenTimerIsStartedAndStoppedTwoTimesExpectNoCrash) {
 TEST(TestTimer, GivenStartedTimerWhenGetElapsedTimeIsCalledExpectReturnResonableTime) {
     MockFunction<void(void)> mockCallback;
     Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
-    SimpleTimer<std::chrono::milliseconds> timer(functionInfo, std::make_unique<SingleRunnerStrategy>());
+    SimpleTimer timer(functionInfo, std::make_unique<SingleRunnerStrategy>());
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
     auto elapsedTime = timer.getElapsedTime();
