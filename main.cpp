@@ -13,7 +13,7 @@ int main(){
         std::cin>>interval;
         interval_ms = interval*1000;
     }
-    SimpleTimerFactory<std::chrono::milliseconds> simpleTimerFactory{};
+    SimpleTimerFactory simpleTimerFactory{};
     auto t1 = simpleTimerFactory.CreateOneShotTimer([]{std::cout<<"I am single shot!"<<std::endl;}, std::chrono::milliseconds{3*interval_ms});
     auto t2 = simpleTimerFactory.CreateRecurringTimer([](){std::cout<<"Running..."<<std::endl;}, std::chrono::milliseconds{int(1.5*interval_ms)});
     auto t3 = simpleTimerFactory.CreateRecurringTimer([](){std::cout<<"Walking..."<<std::endl;}, std::chrono::milliseconds{interval_ms});
