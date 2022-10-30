@@ -6,17 +6,17 @@
 
 
 int main(){
-    std::chrono::duration<double, std::ratio<1,1>> intervalS;
+    std::chrono::duration<double> intervalSeconds;
     {
         int interval;
         std::cout<<"please give me interval in seconds"<<std::endl;
         std::cin>>interval;
-        intervalS = std::chrono::duration<double, std::ratio<1,1>>(interval);
+        intervalSeconds = std::chrono::duration<double>(interval);
     }
     SimpleTimerFactory simpleTimerFactory{};
-    auto t1 = simpleTimerFactory.CreateOneShotTimer([]{std::cout<<"I am single shot!"<<std::endl;}, 3*intervalS);
-    auto t2 = simpleTimerFactory.CreateRecurringTimer([](){std::cout<<"Running..."<<std::endl;}, 1.5*intervalS);
-    auto t3 = simpleTimerFactory.CreateRecurringTimer([](){std::cout<<"Walking..."<<std::endl;}, intervalS);
+    auto t1 = simpleTimerFactory.CreateOneShotTimer([]{std::cout<<"I am single shot!"<<std::endl;}, 3*intervalSeconds);
+    auto t2 = simpleTimerFactory.CreateRecurringTimer([]{std::cout<<"Running..."<<std::endl;}, 1.5*intervalSeconds);
+    auto t3 = simpleTimerFactory.CreateRecurringTimer([]{std::cout<<"Walking..."<<std::endl;}, intervalSeconds);
     t1->start();
     t2->start();
     t3->start();
@@ -27,9 +27,9 @@ int main(){
     {
         std::cin>>key;
         if(key == 'E'){
-            std::cout<<t1->getElapsedTime().count()<<" ms t1 elapsed time"<<std::endl;
-            std::cout<<t2->getElapsedTime().count()<<" ms t2 elapsed time"<<std::endl;
-            std::cout<<t3->getElapsedTime().count()<<" ms t3 elapsed time"<<std::endl;
+            std::cout<<t1.get();
+            std::cout<<t2.get()<<std::endl;
+            std::cout<<t3.get()<<std::endl;
         }
     }
     return 0;

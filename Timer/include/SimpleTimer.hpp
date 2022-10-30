@@ -5,6 +5,7 @@
 #include <functional>
 #include <atomic>
 #include <memory>
+#include <iostream>
 
 #include "ITimer.hpp"
 #include "functionInfo.hpp"
@@ -25,6 +26,7 @@ struct SimpleTimer : ITimer{
     std::chrono::milliseconds getElapsedTime() const override;
     ~SimpleTimer();
     SimpleTimer(Timer::FunctionInfo functionInfo, std::unique_ptr<IRunnerStrategy>);
+    friend std::ostream& operator<<(std::ostream& ostream, ITimer* timer);
     private:
         State state{};
         std::jthread t;

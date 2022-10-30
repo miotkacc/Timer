@@ -57,3 +57,13 @@ SimpleTimer::SimpleTimer(Timer::FunctionInfo functionInfo, std::unique_ptr<IRunn
 : functionInfo(functionInfo), strategy(std::move(inStrategy))
 {
 }
+
+std::ostream& operator<<(std::ostream& ostream, ITimer* timer){
+    auto elapsedTime = timer->getElapsedTime();
+    ostream<<"Elapsed ";
+    ostream<<std::chrono::duration_cast<std::chrono::seconds>(elapsedTime).count();
+    ostream<<".";
+    ostream<<elapsedTime.count()%1000;
+    ostream<<" seconds"<<std::endl;
+    return ostream;
+}

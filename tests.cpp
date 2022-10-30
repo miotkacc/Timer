@@ -10,8 +10,8 @@
 
 using namespace testing;
 
-const std::chrono::seconds timeToCall{1};
-const std::chrono::seconds waitTime{3};
+const std::chrono::milliseconds timeToCall{400};
+const std::chrono::milliseconds waitTime{1200};
 
 std::chrono::milliseconds timeBetweenTimerInteractions{100};
 
