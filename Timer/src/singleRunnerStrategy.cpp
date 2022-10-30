@@ -13,11 +13,16 @@ void SingleRunnerStrategy::stop()
     stopVar = true;
 }
 
-void SingleRunnerStrategy::run(const Timer::FunctionInfo& functionInfo, ITimer* const timer){
+SingleRunnerStrategy::~SingleRunnerStrategy()
+{
+    stop();
+}
+
+void SingleRunnerStrategy::run(const Timer::FunctionInfo& functionInfo, const std::function<std::chrono::milliseconds()> getElapsedTime){
     while(not stopVar)
     {        
         std::this_thread::sleep_until(std::chrono::steady_clock::now() + checkOfElapsedTimePeriod);
-        bool isTimeElapsed = timer->getElapsedTime() >= functionInfo.interval;
+        bool isTimeElapsed = getElapsedTime() >= functionInfo.interval;
         if(isTimeElapsed){
             functionInfo.funName();
             break;

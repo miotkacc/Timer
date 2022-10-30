@@ -13,12 +13,17 @@ void RecurringRunnerStrategy::stop()
     stopVar = true;
 }
 
-void RecurringRunnerStrategy::run(const Timer::FunctionInfo& functionInfo, ITimer* const timer){
+RecurringRunnerStrategy::~RecurringRunnerStrategy()
+{
+    stop();
+}
+
+void RecurringRunnerStrategy::run(const Timer::FunctionInfo& functionInfo, const std::function<std::chrono::milliseconds ()> getElapsedTime){
     int lastIntervalCall{};
     while(not stopVar)
     {
         std::this_thread::sleep_until(std::chrono::steady_clock::now() + checkOfElapsedTimePeriod);
-        auto actualInterval = timer->getElapsedTime() / functionInfo.interval;
+        auto actualInterval = getElapsedTime() / functionInfo.interval;
         bool isTimeElapsed =  lastIntervalCall != actualInterval;
         if(isTimeElapsed){
             functionInfo.funName();

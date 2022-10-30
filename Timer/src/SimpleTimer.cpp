@@ -11,7 +11,7 @@ void SimpleTimer::start(){
         t->join();
     }
     startTime = std::chrono::steady_clock::now();
-    t = std::make_unique<std::thread>(&IRunnerStrategy::run, strategy.get(), std::ref(functionInfo), this);
+    t = std::make_unique<std::thread>(&IRunnerStrategy::run, strategy.get(), std::ref(functionInfo), std::bind(&SimpleTimer::getElapsedTime, this));
     state = State::start;
 }
 
