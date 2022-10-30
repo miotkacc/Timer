@@ -7,6 +7,6 @@
 
 
 struct TimerAbstractFactory{
-    virtual std::unique_ptr<ITimer> CreateOneShotTimer(std::function<void()>, std::chrono::milliseconds) = 0;
-    virtual std::unique_ptr<ITimer> CreateRecurringTimer(std::function<void()>, std::chrono::milliseconds) = 0;
+    virtual std::unique_ptr<ITimer> CreateOneShotTimer(std::function<void()>, std::chrono::duration<double, std::ratio<1,1>>) = 0;
+    virtual std::unique_ptr<ITimer> CreateRecurringTimer(std::function<void()>, std::chrono::duration<double, std::ratio<1,1>>) = 0;
 };
