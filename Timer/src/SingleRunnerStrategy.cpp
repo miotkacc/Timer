@@ -1,7 +1,7 @@
 #include <thread>
 
-#include "singleRunnerStrategy.hpp"
-#include "functionInfo.hpp"
+#include "SingleRunnerStrategy.hpp"
+#include "FunctionInfo.hpp"
 #include "ITimer.hpp"
 
 SingleRunnerStrategy::SingleRunnerStrategy(std::chrono::nanoseconds period):

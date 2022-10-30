@@ -8,7 +8,7 @@
 #include <iostream>
 
 #include "ITimer.hpp"
-#include "functionInfo.hpp"
+#include "FunctionInfo.hpp"
 #include "IRunnerStrategy.hpp"
 
 

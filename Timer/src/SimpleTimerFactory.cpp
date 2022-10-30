@@ -2,9 +2,9 @@
 
 #include "SimpleTimerFactory.hpp"
 #include "SimpleTimer.hpp"
-#include "singleRunnerStrategy.hpp"
-#include "recurringRunnerStrategy.hpp"
-#include "functionInfo.hpp"
+#include "SingleRunnerStrategy.hpp"
+#include "RecurringRunnerStrategy.hpp"
+#include "FunctionInfo.hpp"
 
 std::unique_ptr<ITimer> SimpleTimerFactory::CreateOneShotTimer(std::function<void()> function, std::chrono::duration<double, std::ratio<1,1>> interval)
 {

@@ -4,8 +4,8 @@
 
 #include "SimpleTimer.hpp"
 #include "SimpleTimerFactory.hpp"
-#include "singleRunnerStrategy.hpp"
-#include "recurringRunnerStrategy.hpp"
+#include "SingleRunnerStrategy.hpp"
+#include "RecurringRunnerStrategy.hpp"
 
 
 using namespace testing;

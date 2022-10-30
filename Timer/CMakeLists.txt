@@ -1,7 +1,7 @@
 add_library(SimpleTimer src/SimpleTimer.cpp)
 target_include_directories(SimpleTimer PUBLIC include)
 
-add_library(RunnerStrategy src/recurringRunnerStrategy.cpp src/singleRunnerStrategy.cpp)
+add_library(RunnerStrategy src/RecurringRunnerStrategy.cpp src/SingleRunnerStrategy.cpp)
 
 target_include_directories(RunnerStrategy PUBLIC include)
 

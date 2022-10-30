@@ -1,7 +1,7 @@
 #include <thread>
 
-#include "recurringRunnerStrategy.hpp"
-#include "functionInfo.hpp"
+#include "RecurringRunnerStrategy.hpp"
+#include "FunctionInfo.hpp"
 #include "ITimer.hpp"
 
 RecurringRunnerStrategy::RecurringRunnerStrategy(std::chrono::nanoseconds period):
