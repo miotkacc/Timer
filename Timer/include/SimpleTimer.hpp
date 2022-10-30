@@ -27,7 +27,7 @@ struct SimpleTimer : ITimer{
     SimpleTimer(Timer::FunctionInfo functionInfo, std::unique_ptr<IRunnerStrategy>);
     private:
         State state{};
-        std::unique_ptr<std::thread> t;
+        std::jthread t;
         std::unique_ptr<IRunnerStrategy> strategy;
         std::chrono::time_point<std::chrono::steady_clock> startTime;
         std::chrono::time_point<std::chrono::steady_clock> stopTime;

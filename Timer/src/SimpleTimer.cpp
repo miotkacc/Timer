@@ -6,12 +6,12 @@ void SimpleTimer::start(){
     {
         return;
     }
-    if(t and t->joinable())
+    if(t.joinable())
     { 
-        t->join();
+        t.join();
     }
     startTime = std::chrono::steady_clock::now();
-    t = std::make_unique<std::thread>(&IRunnerStrategy::run, strategy.get(), std::ref(functionInfo), std::bind(&SimpleTimer::getElapsedTime, this));
+    t = std::jthread(&IRunnerStrategy::run, strategy.get(), std::ref(functionInfo), std::bind(&SimpleTimer::getElapsedTime, this));
     state = State::start;
 }
 
@@ -23,9 +23,9 @@ void SimpleTimer::stop(){
 
     strategy->stop();
     
-    if(t and t->joinable())
+    if(t.joinable())
     { 
-        t->join();
+        t.join();
     }
 
     stopTime = std::chrono::steady_clock::now();

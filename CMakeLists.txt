@@ -1,6 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 project(Timers)
 
+SET(CMAKE_CXX_STANDARD 20)
+
 include(FetchContent)
 FetchContent_Declare(
   googletest
