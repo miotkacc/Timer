@@ -47,10 +47,6 @@ std::chrono::milliseconds SimpleTimer::getElapsedTime() const{
 
 SimpleTimer::~SimpleTimer()
 {
-    if(state==State::start)
-    {
-        stop();
-    }
 }
 
 SimpleTimer::SimpleTimer(Timer::FunctionInfo functionInfo, std::unique_ptr<IRunnerStrategy> inStrategy)
