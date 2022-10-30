@@ -10,16 +10,15 @@
 
 using namespace testing;
 
-const std::chrono::milliseconds timeToCall{400};
-const std::chrono::milliseconds waitTime{1200};
-
-std::chrono::milliseconds timeBetweenTimerInteractions{100};
 
 class TestTimer : public ::testing::Test
 {
 protected:
     MockFunction<void(void)> mockCallback;
     MockFunction<std::chrono::milliseconds()> getElapsedTimeMock;
+    const std::chrono::milliseconds timeToCall{400};
+    const std::chrono::milliseconds waitTime{1200};
+    const std::chrono::milliseconds timeBetweenTimerInteractions{100};
 };
 
 class TestSimpleTimer : public TestTimer
