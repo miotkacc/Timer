@@ -1,6 +1,10 @@
 #include "SimpleTimer.hpp"
 
 
+SimpleTimer::SimpleTimer(std::unique_ptr<IRunnerStrategy> inStrategy)
+: strategy(std::move(inStrategy))
+{}
+
 void SimpleTimer::start(){
     if(state==State::start)
     {
@@ -11,7 +15,7 @@ void SimpleTimer::start(){
         t.join();
     }
     startTime = std::chrono::steady_clock::now();
-    t = std::jthread(&IRunnerStrategy::run, strategy.get(), std::ref(functionInfo), std::bind(&SimpleTimer::getElapsedTime, this));
+    t = std::jthread(&IRunnerStrategy::run, strategy.get(), std::bind(&SimpleTimer::getElapsedTime, this));
     state = State::start;
 }
 
@@ -46,10 +50,6 @@ std::chrono::milliseconds SimpleTimer::getElapsedTime() const{
 }
 
 SimpleTimer::~SimpleTimer()
-{}
-
-SimpleTimer::SimpleTimer(Timer::FunctionInfo functionInfo, std::unique_ptr<IRunnerStrategy> inStrategy)
-: functionInfo(functionInfo), strategy(std::move(inStrategy))
 {}
 
 std::ostream& operator<<(std::ostream& ostream, ITimer* timer){

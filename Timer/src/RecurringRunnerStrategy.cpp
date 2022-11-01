@@ -4,8 +4,10 @@
 #include "FunctionInfo.hpp"
 #include "ITimer.hpp"
 
-RecurringRunnerStrategy::RecurringRunnerStrategy(std::chrono::nanoseconds period):
-checkOfElapsedTimePeriod{period}
+
+RecurringRunnerStrategy::RecurringRunnerStrategy(const Timer::FunctionInfo& functionInfo, 
+std::chrono::nanoseconds period):
+functionInfo{functionInfo}, checkOfElapsedTimePeriod{period}
 {
     if(checkOfElapsedTimePeriod <= std::chrono::nanoseconds{0}){
         std::__throw_invalid_argument("check of elapsed time period must be greater than 0");
@@ -22,7 +24,7 @@ RecurringRunnerStrategy::~RecurringRunnerStrategy()
     stop();
 }
 
-void RecurringRunnerStrategy::run(const Timer::FunctionInfo& functionInfo, const std::function<std::chrono::milliseconds ()> getElapsedTime){
+void RecurringRunnerStrategy::run(const std::function<std::chrono::milliseconds()> getElapsedTime){
     int lastIntervalCall{};
     while(not stopVar)
     {
