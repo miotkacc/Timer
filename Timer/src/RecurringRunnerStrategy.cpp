@@ -6,7 +6,11 @@
 
 RecurringRunnerStrategy::RecurringRunnerStrategy(std::chrono::nanoseconds period):
 checkOfElapsedTimePeriod{period}
-{};
+{
+    if(checkOfElapsedTimePeriod <= std::chrono::nanoseconds{0}){
+        std::__throw_invalid_argument("check of elapsed time period must be greater than 0");
+    }
+};
 
 void RecurringRunnerStrategy::stop()
 {

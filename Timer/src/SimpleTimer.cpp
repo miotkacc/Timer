@@ -46,13 +46,11 @@ std::chrono::milliseconds SimpleTimer::getElapsedTime() const{
 }
 
 SimpleTimer::~SimpleTimer()
-{
-}
+{}
 
 SimpleTimer::SimpleTimer(Timer::FunctionInfo functionInfo, std::unique_ptr<IRunnerStrategy> inStrategy)
 : functionInfo(functionInfo), strategy(std::move(inStrategy))
-{
-}
+{}
 
 std::ostream& operator<<(std::ostream& ostream, ITimer* timer){
     auto elapsedTime = timer->getElapsedTime();

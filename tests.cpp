@@ -9,7 +9,7 @@
 
 
 using namespace testing;
-
+using namespace std::chrono_literals;
 
 class TestTimer : public ::testing::Test
 {
@@ -147,6 +147,26 @@ TEST_F(TestSingleRunnerStrategy, GivenSimpleRunnerStrategyWhenRunIsCalledThenExp
     EXPECT_CALL(mockCallback, Call());
     singleRunnerStrategy.run(functionInfo, getElapsedTimeMock.AsStdFunction());
     std::this_thread::sleep_for(2 * timeBetweenTimerInteractions);
+}
+
+TEST_F(TestSingleRunnerStrategy, GivenZeroCheckTimeWhenConstructorIsCalledThenExpectThrow)
+{
+    EXPECT_THROW(SingleRunnerStrategy(0ns), std::invalid_argument);
+}
+
+TEST_F(TestSingleRunnerStrategy, GivenNegativeCheckTimeWhenConstructorIsCalledThenExpectThrow)
+{
+    EXPECT_THROW(SingleRunnerStrategy(-1ns), std::invalid_argument);
+}
+
+TEST_F(TestRecurringRunnerStrategy, GivenZeroCheckTimeWhenConstructorIsCalledThenExpectThrow)
+{   
+    EXPECT_THROW(RecurringRunnerStrategy(0ns), std::invalid_argument);
+}
+
+TEST_F(TestRecurringRunnerStrategy, GivenNegativeCheckTimeWhenConstructorIsCalledThenExpectThrow)
+{
+    EXPECT_THROW(RecurringRunnerStrategy(-1ns), std::invalid_argument);
 }
 
 int main(int argc, char **argv)
