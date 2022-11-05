@@ -55,9 +55,7 @@ SimpleTimer::~SimpleTimer()
 std::ostream& operator<<(std::ostream& ostream, ITimer* timer){
     auto elapsedTime = timer->getElapsedTime();
     ostream<<"Elapsed ";
-    ostream<<std::chrono::duration_cast<std::chrono::seconds>(elapsedTime).count();
-    ostream<<".";
-    ostream<<elapsedTime.count()%1000;
+    ostream<<std::chrono::duration<double, std::ratio<1>>(elapsedTime).count();
     ostream<<" seconds"<<std::endl;
     return ostream;
 }
