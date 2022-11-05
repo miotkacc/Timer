@@ -28,6 +28,10 @@ class TestSimpleTimerFactory : public TestTimer
 {
 };
 
+class TestRecurringTimerFactory: public TestTimer
+{
+};
+
 class TestSingleRunnerStrategy : public TestTimer
 {
 public:
@@ -142,9 +146,23 @@ TEST_F(TestSimpleTimerFactory, GivenConstructedTimerWithBuilderWhenStartIsCalled
     std::this_thread::sleep_for(waitTime);
 }
 
+TEST_F(TestRecurringTimerFactory, GivenConstructedTimerWithOneMsWithBuilderWhenStartIsCalledThenExpectCallCallbackMultipleTimes)
+{
+    SimpleTimerFactory simpleTimerFactory{};
+    int timesCalled{};
+    std::chrono::milliseconds myTimeToCall{1};
+    auto functionToCall = [&timesCalled]{timesCalled++;};
+    auto timer = simpleTimerFactory.CreateRecurringTimer(functionToCall, myTimeToCall);
+    timer->start();
+    std::chrono::milliseconds myWaitTime{100};
+    std::this_thread::sleep_for(myWaitTime);
+    timer->stop();
+    EXPECT_GE(timesCalled, 40);
+    EXPECT_LE(timesCalled, 120);
+}
+
 TEST_F(TestSingleRunnerStrategy, GivenSimpleRunnerStrategyWhenRunIsCalledThenExpectMethodBeCalled)
 {
-    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), timeBetweenTimerInteractions};
     SingleRunnerStrategy singleRunnerStrategy{functionInfo};
     EXPECT_CALL(getElapsedTimeMock, Call()).WillOnce(Return(2 * timeBetweenTimerInteractions));
     EXPECT_CALL(mockCallback, Call());

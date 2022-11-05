@@ -9,7 +9,7 @@
 
 class RecurringRunnerStrategy: public IRunnerStrategy{
 public:
-    RecurringRunnerStrategy(const Timer::FunctionInfo&, std::chrono::nanoseconds period=std::chrono::nanoseconds{900});
+    RecurringRunnerStrategy(const Timer::FunctionInfo&, std::chrono::nanoseconds period=std::chrono::nanoseconds{400});
     ~RecurringRunnerStrategy() override;
     void run(const std::function<std::chrono::milliseconds()>) override;
     void stop() override;
