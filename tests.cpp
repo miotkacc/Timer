@@ -22,6 +22,8 @@ protected:
 
 class TestSimpleTimer : public TestTimer
 {
+public:
+    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
 };
 
 class TestSimpleTimerFactory : public TestTimer
@@ -47,7 +49,6 @@ public:
 TEST_F(TestSimpleTimer, GivenTimerWhenStartIsCalledThenExpectCallCallback)
 {
     EXPECT_CALL(mockCallback, Call());
-    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
     SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
     timer.start();
     std::this_thread::sleep_for(waitTime);
@@ -56,7 +57,6 @@ TEST_F(TestSimpleTimer, GivenTimerWhenStartIsCalledThenExpectCallCallback)
 TEST_F(TestSimpleTimer, GivenTimerWithReccuringRunnerStrategyWhenStartIsCalledThenExpectCallCallbackTwoTimes)
 {
     EXPECT_CALL(mockCallback, Call()).Times(2); 
-    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
     SimpleTimer timer(std::make_unique<RecurringRunnerStrategy>(functionInfo));
     timer.start();
     std::this_thread::sleep_for(2.5 * timeToCall);
@@ -64,7 +64,6 @@ TEST_F(TestSimpleTimer, GivenTimerWithReccuringRunnerStrategyWhenStartIsCalledTh
 
 TEST_F(TestSimpleTimer, GivenTimerWhenStopIsCalledMomentAfterStopAndThereIsWaitThenExpectGetElapsedTimeReturnMomentTime)
 {
-    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
     SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
@@ -79,7 +78,6 @@ TEST_F(TestSimpleTimer, GivenTimerWhenStopIsCalledMomentAfterStopAndThereIsWaitT
 
 TEST_F(TestSimpleTimer, GivenTimerWhenStartIsCalledTwoTimesThenExpectNoCrash)
 {
-    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
     SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
@@ -88,7 +86,6 @@ TEST_F(TestSimpleTimer, GivenTimerWhenStartIsCalledTwoTimesThenExpectNoCrash)
 
 TEST_F(TestSimpleTimer, GivenTimerWhenStopIsCalledTwoTimesThenExpectNoCrash)
 {
-    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
     SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
     timer.stop();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
@@ -97,7 +94,6 @@ TEST_F(TestSimpleTimer, GivenTimerWhenStopIsCalledTwoTimesThenExpectNoCrash)
 
 TEST_F(TestSimpleTimer, GivenTimerWhenTimerIsStartedAndStoppedTwoTimesThenExpectNoCrash)
 {
-    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
     SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
@@ -111,7 +107,6 @@ TEST_F(TestSimpleTimer, GivenTimerWhenTimerIsStartedAndStoppedTwoTimesThenExpect
 TEST_F(TestSimpleTimer, GivenNotInitializedTimerWhengetElapsedTimeIsCalledThenExpectReturnZeroMs)
 {
     std::chrono::milliseconds expectedResultOfGetElapsedTime{};
-    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
     SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
     auto resultOfGetElapsedTime = timer.getElapsedTime();
     EXPECT_EQ(resultOfGetElapsedTime, expectedResultOfGetElapsedTime);
@@ -119,7 +114,6 @@ TEST_F(TestSimpleTimer, GivenNotInitializedTimerWhengetElapsedTimeIsCalledThenEx
 
 TEST_F(TestSimpleTimer, GivenStartedTimerWhenGetElapsedTimeIsCalledThenExpectReturnResonableTime)
 {
-    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
     SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);

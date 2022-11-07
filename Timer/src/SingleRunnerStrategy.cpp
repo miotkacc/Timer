@@ -1,25 +1,10 @@
 #include <thread>
 
 #include "SingleRunnerStrategy.hpp"
-#include "FunctionInfo.hpp"
-#include "ITimer.hpp"
+
 
 SingleRunnerStrategy::SingleRunnerStrategy(const Timer::FunctionInfo& functionInfo, 
- std::chrono::nanoseconds period):
-functionInfo{functionInfo}, checkOfElapsedTimePeriod{period}
-{
-    if(checkOfElapsedTimePeriod <= std::chrono::nanoseconds{0}){
-        std::__throw_invalid_argument("check of elapsed time period must be greater than 0");
-    }
-}
-
-void SingleRunnerStrategy::stop(){
-    stopVar = true;
-}
-
-SingleRunnerStrategy::~SingleRunnerStrategy(){
-    stop();
-}
+    std::chrono::nanoseconds period): RunnerStrategy(functionInfo, period){};
 
 void SingleRunnerStrategy::run(const std::function<std::chrono::milliseconds()> getElapsedTime){
     while(not stopVar)

@@ -2,19 +2,14 @@
 
 #include <atomic>
 
-#include "IRunnerStrategy.hpp"
+#include "RunnerStrategy.hpp"
 #include "FunctionInfo.hpp"
 
 
 
-class RecurringRunnerStrategy: public IRunnerStrategy{
+class RecurringRunnerStrategy: public RunnerStrategy{
 public:
-    RecurringRunnerStrategy(const Timer::FunctionInfo&, std::chrono::nanoseconds period=std::chrono::nanoseconds{400});
-    ~RecurringRunnerStrategy() override;
     void run(const std::function<std::chrono::milliseconds()>) override;
-    void stop() override;
-private:
-    const Timer::FunctionInfo functionInfo;
-    std::atomic<bool> stopVar{};
-    const std::chrono::nanoseconds checkOfElapsedTimePeriod;
+    RecurringRunnerStrategy(const Timer::FunctionInfo&, 
+        std::chrono::nanoseconds period=std::chrono::nanoseconds{400});
 };
