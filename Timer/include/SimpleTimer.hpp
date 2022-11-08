@@ -26,7 +26,7 @@ struct SimpleTimer : ITimer{
     std::chrono::milliseconds getElapsedTime() const override;
     ~SimpleTimer();
     SimpleTimer(std::unique_ptr<IRunnerStrategy>);
-    friend std::ostream& operator<<(std::ostream& ostream, ITimer* timer);
+    friend std::ostream& operator<<(std::ostream& ostream, const ITimer* timer);
     private:
         State state{};
         std::jthread t;

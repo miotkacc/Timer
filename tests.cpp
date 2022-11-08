@@ -23,7 +23,7 @@ protected:
 class TestSimpleTimer : public TestTimer
 {
 public:
-    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
+    const Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
 };
 
 class TestSimpleTimerFactory : public TestTimer
@@ -37,13 +37,13 @@ class TestRecurringTimerFactory: public TestTimer
 class TestSingleRunnerStrategy : public TestTimer
 {
 public:
-    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), timeBetweenTimerInteractions};
+    const Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), timeBetweenTimerInteractions};
 };
 
 class TestRecurringRunnerStrategy : public TestTimer
 {
 public:
-    Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), timeBetweenTimerInteractions};
+    const Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), timeBetweenTimerInteractions};
 };
 
 TEST_F(TestSimpleTimer, GivenTimerWhenStartIsCalledThenExpectCallCallback)
@@ -69,9 +69,9 @@ TEST_F(TestSimpleTimer, GivenTimerWhenStopIsCalledMomentAfterStopAndThereIsWaitT
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
     timer.stop();
     std::this_thread::sleep_for(waitTime);
-    auto getElapsedTimeCallResult = timer.getElapsedTime();
-    auto minimumExpectedWait = timeBetweenTimerInteractions;
-    auto maximumExpectedWait = 2 * timeBetweenTimerInteractions;
+    const auto getElapsedTimeCallResult = timer.getElapsedTime();
+    const auto minimumExpectedWait = timeBetweenTimerInteractions;
+    const auto maximumExpectedWait = 2 * timeBetweenTimerInteractions;
     ASSERT_GE(getElapsedTimeCallResult, minimumExpectedWait);
     ASSERT_LE(getElapsedTimeCallResult, maximumExpectedWait);
 }
@@ -108,7 +108,7 @@ TEST_F(TestSimpleTimer, GivenNotInitializedTimerWhengetElapsedTimeIsCalledThenEx
 {
     std::chrono::milliseconds expectedResultOfGetElapsedTime{};
     SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
-    auto resultOfGetElapsedTime = timer.getElapsedTime();
+    const auto resultOfGetElapsedTime = timer.getElapsedTime();
     EXPECT_EQ(resultOfGetElapsedTime, expectedResultOfGetElapsedTime);
 }
 
@@ -117,16 +117,16 @@ TEST_F(TestSimpleTimer, GivenStartedTimerWhenGetElapsedTimeIsCalledThenExpectRet
     SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
-    auto elapsedTime = timer.getElapsedTime();
-    auto expectedMinimalElapsedTime = 0.5 * timeBetweenTimerInteractions;
-    auto expectedMaximalElapsedTime = 1.5 * timeBetweenTimerInteractions;
+    const auto elapsedTime = timer.getElapsedTime();
+    const auto expectedMinimalElapsedTime = 0.5 * timeBetweenTimerInteractions;
+    const auto expectedMaximalElapsedTime = 1.5 * timeBetweenTimerInteractions;
     ASSERT_GE(elapsedTime, expectedMinimalElapsedTime);
     ASSERT_LE(elapsedTime, expectedMaximalElapsedTime);
 }
 
 TEST_F(TestSimpleTimerFactory, GivenSimpleTimerFactoryWhenCreateRecurringTimerMethodIsCalledThenExpectReccuringTimerSuccesfullyCreated)
 {
-    SimpleTimerFactory simpleTimerFactory{};
+    const SimpleTimerFactory simpleTimerFactory{};
     auto recurringTimerPtr = simpleTimerFactory.CreateRecurringTimer([]() {}, waitTime);
     EXPECT_NE(recurringTimerPtr.get(), nullptr);
 }
@@ -134,7 +134,7 @@ TEST_F(TestSimpleTimerFactory, GivenSimpleTimerFactoryWhenCreateRecurringTimerMe
 TEST_F(TestSimpleTimerFactory, GivenConstructedTimerWithBuilderWhenStartIsCalledThenExpectCallCallback)
 {
     EXPECT_CALL(mockCallback, Call());
-    SimpleTimerFactory simpleTimerFactory{};
+    const SimpleTimerFactory simpleTimerFactory{};
     auto timer = simpleTimerFactory.CreateOneShotTimer(mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall));
     timer->start();
     std::this_thread::sleep_for(waitTime);
@@ -142,13 +142,13 @@ TEST_F(TestSimpleTimerFactory, GivenConstructedTimerWithBuilderWhenStartIsCalled
 
 TEST_F(TestRecurringTimerFactory, GivenConstructedTimerWithOneMsWithBuilderWhenStartIsCalledThenExpectCallCallbackMultipleTimes)
 {
-    SimpleTimerFactory simpleTimerFactory{};
+    const SimpleTimerFactory simpleTimerFactory{};
     int timesCalled{};
-    std::chrono::milliseconds myTimeToCall{1};
+    const std::chrono::milliseconds myTimeToCall{1};
     auto functionToCall = [&timesCalled]{timesCalled++;};
     auto timer = simpleTimerFactory.CreateRecurringTimer(functionToCall, myTimeToCall);
     timer->start();
-    std::chrono::milliseconds myWaitTime{100};
+    const std::chrono::milliseconds myWaitTime{100};
     std::this_thread::sleep_for(myWaitTime);
     timer->stop();
     EXPECT_GE(timesCalled, 40);

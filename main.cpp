@@ -13,7 +13,7 @@ int main(){
         std::cin>>interval;
         intervalSeconds = std::chrono::duration<double>(interval);
     }
-    SimpleTimerFactory simpleTimerFactory{};
+    const SimpleTimerFactory simpleTimerFactory{};
     auto t1 = simpleTimerFactory.CreateOneShotTimer([]{std::cout<<"I am single shot!"<<std::endl;}, 3*intervalSeconds);
     auto t2 = simpleTimerFactory.CreateRecurringTimer([]{std::cout<<"Running..."<<std::endl;}, 1.5*intervalSeconds);
     auto t3 = simpleTimerFactory.CreateRecurringTimer([]{std::cout<<"Walking..."<<std::endl;}, intervalSeconds);

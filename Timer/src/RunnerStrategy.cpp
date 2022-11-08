@@ -5,7 +5,7 @@
 #include "ITimer.hpp"
 
 RunnerStrategy::RunnerStrategy(const Timer::FunctionInfo& functionInfo, 
- std::chrono::nanoseconds period):
+const std::chrono::nanoseconds period):
 functionInfo{functionInfo}, checkOfElapsedTimePeriod{period}
 {
     if(checkOfElapsedTimePeriod <= std::chrono::nanoseconds{0}){

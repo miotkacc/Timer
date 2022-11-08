@@ -7,7 +7,7 @@
 
 class RunnerStrategy: public IRunnerStrategy{
 public:
-    RunnerStrategy(const Timer::FunctionInfo&, std::chrono::nanoseconds period=std::chrono::nanoseconds{400});
+    RunnerStrategy(const Timer::FunctionInfo&, const std::chrono::nanoseconds period=std::chrono::nanoseconds{400});
     void stop() override;
     ~RunnerStrategy() override;
 protected:

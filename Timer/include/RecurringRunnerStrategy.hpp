@@ -11,5 +11,5 @@ class RecurringRunnerStrategy: public RunnerStrategy{
 public:
     void run(const std::function<std::chrono::milliseconds()>) override;
     RecurringRunnerStrategy(const Timer::FunctionInfo&, 
-        std::chrono::nanoseconds period=std::chrono::nanoseconds{400});
+       const std::chrono::nanoseconds period=std::chrono::nanoseconds{400});
 };

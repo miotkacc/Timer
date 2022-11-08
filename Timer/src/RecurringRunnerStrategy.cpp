@@ -4,7 +4,7 @@
 
 
 RecurringRunnerStrategy::RecurringRunnerStrategy(const Timer::FunctionInfo& functionInfo, 
-    std::chrono::nanoseconds period): RunnerStrategy(functionInfo, period){};
+    const std::chrono::nanoseconds period): RunnerStrategy(functionInfo, period){};
 
 void RecurringRunnerStrategy::run(const std::function<std::chrono::milliseconds()> getElapsedTime){
     int lastIntervalCall{};

@@ -10,5 +10,5 @@ class SingleRunnerStrategy: public RunnerStrategy{
 public:
     void run(const std::function<std::chrono::milliseconds()>);
     SingleRunnerStrategy(const Timer::FunctionInfo& functionInfo, 
-        std::chrono::nanoseconds period=std::chrono::nanoseconds{400});
+       const std::chrono::nanoseconds period=std::chrono::nanoseconds{400});
 };

@@ -52,8 +52,8 @@ std::chrono::milliseconds SimpleTimer::getElapsedTime() const{
 SimpleTimer::~SimpleTimer()
 {}
 
-std::ostream& operator<<(std::ostream& ostream, ITimer* timer){
-    auto elapsedTime = timer->getElapsedTime();
+std::ostream& operator<<(std::ostream& ostream, const ITimer* timer){
+    const auto elapsedTime = timer->getElapsedTime();
     ostream<<"Elapsed ";
     ostream<<std::chrono::duration<double, std::ratio<1>>(elapsedTime).count();
     ostream<<" seconds"<<std::endl;
