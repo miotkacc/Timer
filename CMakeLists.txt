@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 project(Timers)
-
+add_compile_options(-Werror -Wall -Wextra)
 SET(CMAKE_CXX_STANDARD 20)
 
 include(FetchContent)

@@ -15,13 +15,13 @@ If user type "E" all timers elapsed time(time since start counting) is displayed
 # how to run
 ```
 mkdir build  
-cd build && cmake .. && make  
+cd build && cmake -DCMAKE_CXX_COMPILER=g++ .. && make  
 ./main  
 ```
 
 # how to run tests
 ```
 mkdir build  
-cd build && cmake .. && make  
+cd build && cmake -DCMAKE_CXX_COMPILER=g++ .. && make  
 ./tests
 ```
