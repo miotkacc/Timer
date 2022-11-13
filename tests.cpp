@@ -30,7 +30,7 @@ class TestSimpleTimerFactory : public TestTimer
 {
 };
 
-class TestRecurringTimerFactory: public TestTimer
+class TestRecurringTimerFactory : public TestTimer
 {
 };
 
@@ -44,6 +44,20 @@ class TestRecurringRunnerStrategy : public TestTimer
 {
 public:
     const Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), timeBetweenTimerInteractions};
+    
+    void stopTimerAfterSomeDelayInSeparateThread(RecurringRunnerStrategy& recurringRunnerStrategy){
+        thread = std::jthread(&TestRecurringRunnerStrategy::stopTimerAfterSomeDelay, this, std::ref(recurringRunnerStrategy));
+    }
+
+    void stopTimerAfterSomeDelay(RecurringRunnerStrategy& recurringRunnerStrategy)
+    {
+        std::this_thread::sleep_for(2*timeBetweenTimerInteractions);
+        
+        recurringRunnerStrategy.stop();
+    }
+
+private:
+    std::jthread thread;
 };
 
 TEST_F(TestSimpleTimer, GivenTimerWhenStartIsCalledThenExpectCallCallback)
@@ -56,19 +70,21 @@ TEST_F(TestSimpleTimer, GivenTimerWhenStartIsCalledThenExpectCallCallback)
 
 TEST_F(TestSimpleTimer, GivenTimerWithReccuringRunnerStrategyWhenStartIsCalledThenExpectCallCallbackTwoTimes)
 {
-    EXPECT_CALL(mockCallback, Call()).Times(2); 
+    EXPECT_CALL(mockCallback, Call()).Times(2);
     SimpleTimer timer(std::make_unique<RecurringRunnerStrategy>(functionInfo));
     timer.start();
     std::this_thread::sleep_for(2.5 * timeToCall);
 }
 
-TEST_F(TestSimpleTimer, GivenTimerWhenStopIsCalledMomentAfterStopAndThereIsWaitThenExpectGetElapsedTimeReturnMomentTime)
+TEST_F(TestSimpleTimer, GivenTimerWhenStopIsCalledMomentAfterStartAndThereIsWaitThenExpectGetElapsedTimeReturnMomentTime)
 {
     SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
+    
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
     timer.stop();
     std::this_thread::sleep_for(waitTime);
+    
     const auto getElapsedTimeCallResult = timer.getElapsedTime();
     const auto minimumExpectedWait = timeBetweenTimerInteractions;
     const auto maximumExpectedWait = 2 * timeBetweenTimerInteractions;
@@ -95,6 +111,7 @@ TEST_F(TestSimpleTimer, GivenTimerWhenStopIsCalledTwoTimesThenExpectNoCrash)
 TEST_F(TestSimpleTimer, GivenTimerWhenTimerIsStartedAndStoppedTwoTimesThenExpectNoCrash)
 {
     SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
+    
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
     timer.stop();
@@ -116,8 +133,10 @@ TEST_F(TestSimpleTimer, GivenStartedTimerWhenGetElapsedTimeIsCalledThenExpectRet
 {
     SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
     timer.start();
+    
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
     const auto elapsedTime = timer.getElapsedTime();
+    
     const auto expectedMinimalElapsedTime = 0.5 * timeBetweenTimerInteractions;
     const auto expectedMaximalElapsedTime = 1.5 * timeBetweenTimerInteractions;
     ASSERT_GE(elapsedTime, expectedMinimalElapsedTime);
@@ -145,7 +164,8 @@ TEST_F(TestRecurringTimerFactory, GivenConstructedTimerWithOneMsWithBuilderWhenS
     const SimpleTimerFactory simpleTimerFactory{};
     int timesCalled{};
     const std::chrono::milliseconds myTimeToCall{1};
-    auto functionToCall = [&timesCalled]{timesCalled++;};
+    auto functionToCall = [&timesCalled]
+    { timesCalled++; };
     auto timer = simpleTimerFactory.CreateRecurringTimer(functionToCall, myTimeToCall);
     timer->start();
     const std::chrono::milliseconds myWaitTime{100};
@@ -164,25 +184,43 @@ TEST_F(TestSingleRunnerStrategy, GivenSimpleRunnerStrategyWhenRunIsCalledThenExp
     std::this_thread::sleep_for(2 * timeBetweenTimerInteractions);
 }
 
-TEST_F(TestSingleRunnerStrategy, GivenZeroCheckTimeWhenConstructorIsCalledThenExpectThrow)
+TEST_F(TestSingleRunnerStrategy, GivenZeroCheckTimeWhenRunMethodIsCalledThenExpectTimerRun)
 {
-    EXPECT_THROW(SingleRunnerStrategy(functionInfo, 0ns), std::invalid_argument);
+    SingleRunnerStrategy singleRunnerStrategy(functionInfo, 0ns);
+    EXPECT_CALL(mockCallback, Call());
+    EXPECT_CALL(getElapsedTimeMock, Call()).Times(AtLeast(1)).WillRepeatedly(Return(2*timeBetweenTimerInteractions));
+    singleRunnerStrategy.run(getElapsedTimeMock.AsStdFunction());
 }
 
-TEST_F(TestSingleRunnerStrategy, GivenNegativeCheckTimeWhenConstructorIsCalledThenExpectThrow)
+TEST_F(TestSingleRunnerStrategy, GivenNegativeCheckTimeWhenRunMethodIsCalledThenExpectTimerRun)
 {
-    EXPECT_THROW(SingleRunnerStrategy(functionInfo, -1ns), std::invalid_argument);
+    SingleRunnerStrategy singleRunnerStrategy(functionInfo, -1ns);
+    EXPECT_CALL(mockCallback, Call());
+    EXPECT_CALL(getElapsedTimeMock, Call()).Times(AtLeast(1)).WillRepeatedly(Return(2*timeBetweenTimerInteractions));
+    singleRunnerStrategy.run(getElapsedTimeMock.AsStdFunction());
 }
 
-TEST_F(TestRecurringRunnerStrategy, GivenZeroCheckTimeWhenConstructorIsCalledThenExpectThrow)
+TEST_F(TestRecurringRunnerStrategy, GivenZeroCheckTimeWhenRunMethodIsCalledThenExpectTimerRun)
 {
-    EXPECT_THROW(RecurringRunnerStrategy(functionInfo, 0ns), std::invalid_argument);
+    RecurringRunnerStrategy recurringRunnerStrategy(functionInfo, 0ns);
+    EXPECT_CALL(mockCallback, Call());
+    EXPECT_CALL(getElapsedTimeMock, Call()).Times(AtLeast(1)).WillRepeatedly(Return(3*timeBetweenTimerInteractions));
+    stopTimerAfterSomeDelayInSeparateThread(recurringRunnerStrategy);
+    
+    recurringRunnerStrategy.run(getElapsedTimeMock.AsStdFunction());
 }
 
-TEST_F(TestRecurringRunnerStrategy, GivenNegativeCheckTimeWhenConstructorIsCalledThenExpectThrow)
+TEST_F(TestRecurringRunnerStrategy, GivenNegativeCheckTimeWhenRunMethodIsCalledThenExpectTimerRun)
 {
-    EXPECT_THROW(RecurringRunnerStrategy(functionInfo, -1ns), std::invalid_argument);
+    RecurringRunnerStrategy recurringRunnerStrategy(functionInfo, -1ns);
+    EXPECT_CALL(mockCallback, Call());
+    EXPECT_CALL(getElapsedTimeMock, Call()).Times(AtLeast(1)).WillRepeatedly(Return(3*timeBetweenTimerInteractions));
+    stopTimerAfterSomeDelayInSeparateThread(recurringRunnerStrategy);
+    
+    recurringRunnerStrategy.run(getElapsedTimeMock.AsStdFunction());
 }
+
+
 
 int main(int argc, char **argv)
 {

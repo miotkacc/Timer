@@ -13,5 +13,5 @@ public:
 protected:
     const Timer::FunctionInfo functionInfo;
     std::atomic<bool> stopVar{};
-    const std::chrono::nanoseconds checkOfElapsedTimePeriod;
+    std::chrono::nanoseconds checkOfElapsedTimePeriod;
 };

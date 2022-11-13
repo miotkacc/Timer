@@ -6,7 +6,6 @@
 #include "FunctionInfo.hpp"
 
 
-
 class RecurringRunnerStrategy: public RunnerStrategy{
 public:
     void run(const std::function<std::chrono::milliseconds()>) override;
