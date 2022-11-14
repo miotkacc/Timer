@@ -6,7 +6,7 @@
 namespace Timer{
     struct FunctionInfo
     {
-        std::function<void (void)> funName;
+        const std::function<void (void)> funName;
         std::chrono::milliseconds interval;
     };
 }

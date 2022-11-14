@@ -221,7 +221,6 @@ TEST_F(TestRecurringRunnerStrategy, GivenNegativeCheckTimeWhenRunMethodIsCalledT
 }
 
 
-
 int main(int argc, char **argv)
 {
     testing::InitGoogleTest(&argc, argv);
