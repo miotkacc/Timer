@@ -1,7 +1,7 @@
 #pragma once
 
 #include <chrono>
-
+#include <ostream>
 
 struct ITimer{
     virtual void start() = 0;
