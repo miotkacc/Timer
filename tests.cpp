@@ -6,9 +6,12 @@
 #include "SimpleTimerFactory.hpp"
 #include "SingleRunnerStrategy.hpp"
 #include "RecurringRunnerStrategy.hpp"
+#include "mocks/MockRunnerStrategy.hpp"
 
 using namespace testing;
 using namespace std::chrono_literals;
+
+
 
 class TestTimer : public ::testing::Test
 {
@@ -23,6 +26,10 @@ protected:
 class TestSimpleTimer : public TestTimer
 {
 public:
+    TestSimpleTimer(){
+        mockRunnerStrategyPtr = std::make_unique<MockRunnerStrategy>();
+    }
+    std::unique_ptr<MockRunnerStrategy> mockRunnerStrategyPtr;
     const Timer::FunctionInfo functionInfo{mockCallback.AsStdFunction(), std::chrono::duration_cast<std::chrono::milliseconds>(timeToCall)};
 };
 
@@ -78,7 +85,9 @@ TEST_F(TestSimpleTimer, GivenTimerWithReccuringRunnerStrategyWhenStartIsCalledTh
 
 TEST_F(TestSimpleTimer, GivenTimerWhenStopIsCalledMomentAfterStartAndThereIsWaitThenExpectGetElapsedTimeReturnMomentTime)
 {
-    SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
+    EXPECT_CALL(*mockRunnerStrategyPtr, run).Times(1);
+    EXPECT_CALL(*mockRunnerStrategyPtr, stop).Times(1);
+    SimpleTimer timer(std::move(mockRunnerStrategyPtr));
     
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
@@ -94,7 +103,8 @@ TEST_F(TestSimpleTimer, GivenTimerWhenStopIsCalledMomentAfterStartAndThereIsWait
 
 TEST_F(TestSimpleTimer, GivenTimerWhenStartIsCalledTwoTimesThenExpectNoCrash)
 {
-    SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
+    EXPECT_CALL(*mockRunnerStrategyPtr, run).Times(1);
+    SimpleTimer timer(std::move(mockRunnerStrategyPtr));
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
     timer.start();
@@ -102,7 +112,8 @@ TEST_F(TestSimpleTimer, GivenTimerWhenStartIsCalledTwoTimesThenExpectNoCrash)
 
 TEST_F(TestSimpleTimer, GivenTimerWhenStopIsCalledTwoTimesThenExpectNoCrash)
 {
-    SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
+    EXPECT_CALL(*mockRunnerStrategyPtr, stop).Times(1);
+    SimpleTimer timer(std::move(mockRunnerStrategyPtr));
     timer.stop();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
     timer.stop();
@@ -110,7 +121,9 @@ TEST_F(TestSimpleTimer, GivenTimerWhenStopIsCalledTwoTimesThenExpectNoCrash)
 
 TEST_F(TestSimpleTimer, GivenTimerWhenTimerIsStartedAndStoppedTwoTimesThenExpectNoCrash)
 {
-    SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
+    EXPECT_CALL(*mockRunnerStrategyPtr, run).Times(2);
+    EXPECT_CALL(*mockRunnerStrategyPtr, stop).Times(2);
+    SimpleTimer timer(std::move(mockRunnerStrategyPtr));
     
     timer.start();
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
@@ -124,14 +137,15 @@ TEST_F(TestSimpleTimer, GivenTimerWhenTimerIsStartedAndStoppedTwoTimesThenExpect
 TEST_F(TestSimpleTimer, GivenNotInitializedTimerWhengetElapsedTimeIsCalledThenExpectReturnZeroMs)
 {
     std::chrono::milliseconds expectedResultOfGetElapsedTime{};
-    SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
+    SimpleTimer timer(std::move(mockRunnerStrategyPtr));
     const auto resultOfGetElapsedTime = timer.getElapsedTime();
     EXPECT_EQ(resultOfGetElapsedTime, expectedResultOfGetElapsedTime);
 }
 
 TEST_F(TestSimpleTimer, GivenStartedTimerWhenGetElapsedTimeIsCalledThenExpectReturnResonableTime)
 {
-    SimpleTimer timer(std::make_unique<SingleRunnerStrategy>(functionInfo));
+    EXPECT_CALL(*mockRunnerStrategyPtr, run).Times(1);
+    SimpleTimer timer(std::move(mockRunnerStrategyPtr));
     timer.start();
     
     std::this_thread::sleep_for(timeBetweenTimerInteractions);
